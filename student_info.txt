@@ -1,0 +1,83 @@
+package harish;
+import java.sql.*;
+import java.util.Scanner;
+public class sample1 
+{
+	public static void main(String[] args) throws Exception
+	{
+		int choice = 0,b;
+		boolean z;
+		ResultSet rs=null;
+		Class.forName("oracle.jdbc.OracleDriver");
+		Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","system","harish");
+		Statement st=con.createStatement();
+		Scanner sc =new Scanner(System.in);
+		System.out.print("enter table name     :");
+		String k=sc.next();
+		String query="create table "+k+"(id number(5),name varchar(20),section varchar(10),year number(5))";
+		st.executeUpdate(query);
+		System.out.println("table is created..........");
+		while(z=true)
+		{
+		System.out.println("1.new student");
+		System.out.println("2.get info");
+		System.out.println("3.get total list");
+		System.out.println("4.exit");
+		System.out.println("enter your choice");
+		choice=sc.nextInt();
+		switch(choice)
+		{
+			case 1:		System.out.print("enter your id num    :");
+						int i=sc.nextInt();
+						System.out.print("enter your name      :");
+						String n=sc.next();
+						System.out.print("enter  section       :");
+						String s=sc.next();
+						System.out.print("enter year           :");
+						int y=sc.nextInt();
+						query="insert into "+k+" values("+i+",'"+n+"','"+s+"',"+y+")";
+						st.executeUpdate(query);
+						System.out.println("student added to list");
+						System.out.println("-----------------------");
+						break;
+			case 2:    System.out.println("enter the id number of student  :");
+						b=sc.nextInt();
+						rs=st.executeQuery("select * from "+k);
+						System.out.println("id\t name\t        section\t        year");
+						System.out.println("----------------------------");
+						while(rs.next())
+						{
+							if(b==rs.getInt(1))
+							{
+								System.out.print(rs.getInt(1)+"\t ");
+								System.out.print(rs.getString(2)+"\t        ");
+								System.out.print(rs.getString(3)+"\t        ");
+								System.out.println(rs.getInt(4));
+							}
+						}
+						System.out.println("----------------------------");
+						break;
+			case 3: 	
+						rs=st.executeQuery("select * from "+k);
+						System.out.println("id\t name\t        section\t        year");
+						System.out.println("----------------------------");
+						while(rs.next())
+						{
+							System.out.print(rs.getInt(1)+"\t ");
+							System.out.print(rs.getString(2)+"\t        ");
+							System.out.print(rs.getString(3)+"\t        ");
+							System.out.println(rs.getInt(4));
+						}
+						System.out.println("----------------------------");
+						break;
+			case 4:		
+							z=false;
+							break;
+		}
+	 }
+		st.close();
+		sc.close();
+		con.close();
+	}
+	
+}
